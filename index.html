@@ -889,7 +889,8 @@
                         const cols = row.querySelectorAll('th, td');
                         let rowData = [];
                         cols.forEach(col => {
-                            let text = col.innerText.replace(/(\r\n|\n|\r)/gm, " ").trim();
+                            // Use textContent so text from hidden tabs is captured
+                            let text = (col.textContent || col.innerText || '').replace(/(\r\n|\n|\r)/gm, " ").trim();
                             rowData.push(text);
                         });
                         tsv.push(rowData.join("\t"));
@@ -961,7 +962,8 @@
                         xml += '<Row>';
                         const cells = row.querySelectorAll('th, td');
                         cells.forEach(cell => {
-                            let text = cell.innerText.replace(/(\r\n|\n|\r)/gm, " ").trim();
+                            // Use textContent to ensure hidden tab elements are included in XML export
+                            let text = (cell.textContent || cell.innerText || '').replace(/(\r\n|\n|\r)/gm, " ").trim();
                             text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                             const isHeader = cell.tagName === 'TH';
                             const styleAttr = isHeader ? ' ss:StyleID="Header"' : '';
@@ -986,6 +988,6 @@
             downloadLink.click();
             document.body.removeChild(downloadLink);
         }
-
-        // Export active sheet to CSV format
-<!-- ... existing code -->
+    </script>
+</body>
+</html>
