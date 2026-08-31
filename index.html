@@ -1,993 +1,1026 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vezel to Cape Expedition - Master Workbook</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        excel: {
-                            green: '#107c41',
-                            darkGreen: '#0b5a2f',
-                            headerBg: '#f3f2f1',
-                            gridBorder: '#e1dfdd',
-                            accent: '#185abd'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Can I Vezel to Cape of Good Hope? — Master Expedition Spreadsheet</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            accent: {
+              500: '#f59e0b',
+              600: '#d97706',
             }
+          }
         }
-    </script>
-    <style>
-        /* Custom scrollbar for spreadsheet aesthetics */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
-        .grid-cell-input:focus { outline: 2px solid #107c41; z-index: 10; }
-        .sheet-tab.active {
-            background-color: #ffffff;
-            color: #107c41;
-            border-top: 3px solid #107c41;
-            font-weight: 600;
-        }
-        @media print {
-            .no-print { display: none !important; }
-            .tab-content { display: block !important; }
-            .print-full { width: 100% !important; max-width: none !important; }
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      .sheet-content { display: block !important; margin-bottom: 2rem; page-break-after: always; }
+      body { background: white !important; color: black !important; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-800">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Top Application Bar -->
-    <header class="bg-emerald-900 text-white shadow-md border-b border-emerald-800 no-print sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white shadow-inner font-bold text-xl">
-                    <i class="fa-solid fa-file-excel"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold leading-tight flex items-center gap-2">
-                        "Can I Vezel to Cape of Good Hope?" 
-                        <span class="bg-emerald-700 text-emerald-200 text-xs px-2 py-0.5 rounded-full font-mono">14-PTO / KES 300k Edition</span>
-                    </h1>
-                    <p class="text-xs text-emerald-300">2017 Honda Vezel Hybrid (20 km/L) • 13,500 km Overland Circuit</p>
-                </div>
-            </div>
-
-            <!-- Quick Action Controls -->
-            <div class="flex items-center gap-2 flex-wrap">
-                <div class="bg-emerald-950/60 border border-emerald-700/50 rounded-lg px-2.5 py-1.5 flex items-center gap-2 text-xs">
-                    <span class="text-emerald-400 font-medium"><i class="fa-solid fa-calculator mr-1"></i> Currency:</span>
-                    <select id="currency-toggle" onchange="toggleCurrency(this.value)" class="bg-emerald-900 text-emerald-100 text-xs rounded border border-emerald-600 focus:outline-none px-1.5 py-0.5 font-mono">
-                        <option value="KES" selected>KES (KSh)</option>
-                        <option value="USD">USD ($)</option>
-                    </select>
-                </div>
-
-                <button onclick="copyAllForGoogleSheets()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm" title="Copy ALL 6 sheets to paste directly into Google Sheets (Ctrl+V)">
-                    <i class="fa-solid fa-copy"></i>
-                    <span>Copy All (Google Sheets)</span>
-                </button>
-
-                <button onclick="exportAllToExcel()" class="bg-emerald-800 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm" title="Download a single multi-tab .xls workbook file containing all 6 sheets">
-                    <i class="fa-solid fa-file-excel"></i>
-                    <span>Export Full Workbook (.xls)</span>
-                </button>
-
-                <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-print"></i>
-                    <span>Print All Sheets</span>
-                </button>
-            </div>
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50 no-print border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white shadow">
+          <i class="fa-solid fa-car-side text-lg"></i>
         </div>
-    </header>
-
-    <!-- KPI Summary Cards Banner -->
-    <section class="bg-white border-b border-slate-200 py-3 shadow-xs no-print">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center space-x-3">
-                <div class="p-2 bg-blue-100 text-blue-700 rounded-md text-sm"><i class="fa-solid fa-route"></i></div>
-                <div>
-                    <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Total Distance</div>
-                    <div class="text-sm font-bold font-mono text-slate-800">13,500 km</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center space-x-3">
-                <div class="p-2 bg-amber-100 text-amber-700 rounded-md text-sm"><i class="fa-solid fa-calendar-days"></i></div>
-                <div>
-                    <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Duration / PTO</div>
-                    <div class="text-sm font-bold text-slate-800">20 Days <span class="text-xs font-normal text-slate-500">(14 PTO)</span></div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center space-x-3">
-                <div class="p-2 bg-emerald-100 text-emerald-700 rounded-md text-sm"><i class="fa-solid fa-wallet"></i></div>
-                <div>
-                    <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Total Budget Cap</div>
-                    <div class="text-sm font-bold font-mono text-emerald-700" id="kpi-budget-cap">KES 300,000</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center space-x-3">
-                <div class="p-2 bg-purple-100 text-purple-700 rounded-md text-sm"><i class="fa-solid fa-gas-pump"></i></div>
-                <div>
-                    <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Fuel Target</div>
-                    <div class="text-sm font-bold font-mono text-purple-700">20.0 km/L</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center space-x-3 col-span-2 md:col-span-1">
-                <div class="p-2 bg-emerald-100 text-emerald-800 rounded-md text-sm"><i class="fa-solid fa-passport"></i></div>
-                <div>
-                    <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Visas (KE Passport)</div>
-                    <div class="text-sm font-bold text-emerald-700">100% Visa-Free</div>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Can I Vezel to Cape of Good Hope?
+            <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-medium">24-Day Paced Plan • B&Bs & Hotels</span>
+          </h1>
+          <p class="text-xs text-slate-400">Nairobi ➔ Lake Malawi ➔ Eswatini ➔ Cape Town ➔ Victoria Falls ➔ Nairobi</p>
         </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Currency Toggle -->
+        <button id="currencyToggle" onclick="toggleCurrency()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition flex items-center gap-1.5">
+          <i class="fa-solid fa-coins text-amber-400"></i>
+          <span>Currency: <strong id="currentCurrencyLabel" class="text-emerald-400">KES</strong></span>
+        </button>
+
+        <!-- Print/PDF -->
+        <button onclick="window.print()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i>
+          <span>Print / PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SHEET TABS BAR -->
+    <div class="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 overflow-x-auto custom-scrollbar py-2 text-xs font-medium">
+        <button onclick="switchTab('itinerary')" id="tab-itinerary" class="tab-btn px-3 py-1.5 rounded-md text-white bg-emerald-600 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-route"></i> 1. Master Itinerary (24 Days)
+        </button>
+        <button onclick="switchTab('borders')" id="tab-borders" class="tab-btn px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-passport"></i> 2. Border Directory (9 Posts)
+        </button>
+        <button onclick="switchTab('checklist')" id="tab-checklist" class="tab-btn px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-list-check"></i> 3. Pre-Trip Preparedness
+        </button>
+        <button onclick="switchTab('spares')" id="tab-spares" class="tab-btn px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-wrench"></i> 4. Stock Vezel Spares
+        </button>
+        <button onclick="switchTab('budget')" id="tab-budget" class="tab-btn px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-wallet"></i> 5. Live Budget (KES 300k)
+        </button>
+        <button onclick="switchTab('content')" id="tab-content" class="tab-btn px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-video"></i> 6. YouTube & TikTok Plan
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ALERT TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 flex items-center gap-3">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+    <span id="toast-msg" class="text-sm font-medium">Notification message</span>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 no-print">
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Total Distance</p>
+        <p class="text-lg font-bold text-slate-900 mt-1">11,820 <span class="text-xs font-normal text-slate-500">km</span></p>
+        <p class="text-[11px] text-emerald-600 mt-0.5"><i class="fa-solid fa-arrow-up-right"></i> +1,200km buffer</p>
+      </div>
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Trip Duration</p>
+        <p class="text-lg font-bold text-slate-900 mt-1">24 <span class="text-xs font-normal text-slate-500">Days</span></p>
+        <p class="text-[11px] text-indigo-600 mt-0.5">Paced ~6-8 hrs/day</p>
+      </div>
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Hybrid Economy</p>
+        <p class="text-lg font-bold text-emerald-600 mt-1">19.0 <span class="text-xs font-normal text-slate-500">km/L</span></p>
+        <p class="text-[11px] text-slate-500 mt-0.5">@ KES 214 / Litre</p>
+      </div>
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Total Budget</p>
+        <p class="text-lg font-bold text-slate-900 mt-1" id="stat-total-budget">KES 300,000</p>
+        <p class="text-[11px] text-emerald-600 mt-0.5">Strict Cap Compliant</p>
+      </div>
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Borders / Visas</p>
+        <p class="text-lg font-bold text-slate-900 mt-1">9 <span class="text-xs font-normal text-slate-500">Borders</span></p>
+        <p class="text-[11px] text-emerald-600 mt-0.5"><i class="fa-solid fa-check"></i> $0 Visa Fees (KE)</p>
+      </div>
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Rest & Resort Days</p>
+        <p class="text-lg font-bold text-purple-700 mt-1">4 <span class="text-xs font-normal text-slate-500">Full Days</span></p>
+        <p class="text-[11px] text-slate-500 mt-0.5">2x Cape, Malawi, Vic Falls</p>
+      </div>
     </section>
 
-    <!-- Main Content Workbook Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 flex flex-col">
+    <!-- ========================================== -->
+    <!-- SHEET 1: MASTER ITINERARY (24 DAYS) -->
+    <!-- ========================================== -->
+    <div id="sheet-itinerary" class="sheet-content bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-route text-emerald-600"></i>
+            Master Driving Itinerary — Paced 24-Day Route (B&Bs & Hotels)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Daily drive times capped at 5–8 hours max on rougher corridors. Overnight stays at private B&Bs and boutique hotels.</p>
+        </div>
+        <div class="flex items-center gap-2 no-print">
+          <input type="text" id="itinerarySearch" onkeyup="filterItineraryTable()" placeholder="Search leg, border, city..." class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+      </div>
 
-        <!-- Excel-Style Sheet Tab Bar -->
-        <div class="flex items-center overflow-x-auto border-b border-slate-300 bg-slate-200/80 rounded-t-lg pt-1 px-2 no-print space-x-1" id="tab-navigation">
-            <button onclick="switchTab('sheet-itinerary')" id="tab-sheet-itinerary" class="sheet-tab active px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-table"></i> 1. Master Itinerary & Driving
-            </button>
-            <button onclick="switchTab('sheet-borders')" id="tab-sheet-borders" class="sheet-tab px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-passport"></i> 2. Border Directory & Fees
-            </button>
-            <button onclick="switchTab('sheet-checklist')" id="tab-sheet-checklist" class="sheet-tab px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check"></i> 3. Pre-Trip Legal & Admin
-            </button>
-            <button onclick="switchTab('sheet-spares')" id="tab-sheet-spares" class="sheet-tab px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-gears"></i> 4. Vezel Spares & Recovery
-            </button>
-            <button onclick="switchTab('sheet-budget')" id="tab-sheet-budget" class="sheet-tab px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-calculator"></i> 5. Live Budget Calculator
-            </button>
-            <button onclick="switchTab('sheet-content')" id="tab-sheet-content" class="sheet-tab px-4 py-2 text-xs font-medium rounded-t-md text-slate-600 hover:text-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-brands fa-youtube"></i> 6. TikTok & Video Planner
-            </button>
+      <div class="overflow-x-auto custom-scrollbar">
+        <table id="table-itinerary" class="w-full text-left text-xs text-slate-700 border-collapse">
+          <thead class="bg-slate-100/80 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 w-10 text-center">Done</th>
+              <th class="p-3">Day / Weekday</th>
+              <th class="p-3">Route & Key Milestones</th>
+              <th class="p-3">Border Crossing</th>
+              <th class="p-3 text-right">Distance</th>
+              <th class="p-3 text-right">Drive Time</th>
+              <th class="p-3">Private B&B / Hotel Stay</th>
+              <th class="p-3 text-right">Est. Lodging</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100" id="itinerary-tbody">
+            <!-- SOUTHBOUND -->
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 1 (Sat)</td>
+              <td class="p-3 font-medium">Nairobi ➔ Namanga Border ➔ Arusha ➔ Kondoa</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Namanga</span> (KE/TZ)</td>
+              <td class="p-3 text-right font-semibold">460 km</td>
+              <td class="p-3 text-right text-slate-500">~6.5 hrs</td>
+              <td class="p-3">Kondoa Executive Springs B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="3500">KES 3,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 2 (Sun)</td>
+              <td class="p-3 font-medium">Kondoa ➔ Dodoma (Capital) ➔ Iringa Highlands</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">380 km</td>
+              <td class="p-3 text-right text-slate-500">~5.5 hrs</td>
+              <td class="p-3">Isimila Hotel & Garden Lodge</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="3800">KES 3,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 3 (Mon)</td>
+              <td class="p-3 font-medium">Iringa ➔ Mbeya ➔ Songwe Border ➔ Karonga (Malawi)</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Songwe</span> (TZ/MW)</td>
+              <td class="p-3 text-right font-semibold">520 km</td>
+              <td class="p-3 text-right text-slate-500">~7.5 hrs</td>
+              <td class="p-3">Beachfront Resort B&B Karonga</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4000">KES 4,000</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 4 (Tue)</td>
+              <td class="p-3 font-medium">Karonga ➔ Scenic Lakeside Drive ➔ Nkhata Bay</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">240 km</td>
+              <td class="p-3 text-right text-slate-500">~3.5 hrs</td>
+              <td class="p-3">Sunbird Waterfront Hotel / Lake B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="bg-purple-50/50 hover:bg-purple-50 transition border-l-4 border-l-purple-500">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-purple-900">Day 5 (Wed)</td>
+              <td class="p-3 font-semibold text-purple-900"><i class="fa-solid fa-umbrella-beach text-purple-600 mr-1"></i> REST DAY 1: Lake Malawi Beach, Filming & Vezel Inspection</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold text-purple-700">0 km</td>
+              <td class="p-3 text-right text-purple-600">Rest</td>
+              <td class="p-3">Sunbird Waterfront Hotel / Lake B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 6 (Thu)</td>
+              <td class="p-3 font-medium">Nkhata Bay ➔ Lilongwe ➔ Mchinji/Chipata Border ➔ Petauke</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Mchinji</span> (MW/ZM)</td>
+              <td class="p-3 text-right font-semibold">560 km</td>
+              <td class="p-3 text-right text-slate-500">~8.0 hrs</td>
+              <td class="p-3">Petauke Executive Lodge</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="3800">KES 3,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 7 (Fri)</td>
+              <td class="p-3 font-medium">Petauke ➔ Great East Road ➔ Lusaka City</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">400 km</td>
+              <td class="p-3 text-right text-slate-500">~5.5 hrs</td>
+              <td class="p-3">Cozy Lodge Lusaka / Garden City B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4500">KES 4,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 8 (Sat)</td>
+              <td class="p-3 font-medium">Lusaka ➔ Chirundu Bridge ➔ Chinhoyi / Kariba Escarpment</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Chirundu</span> (ZM/ZW)</td>
+              <td class="p-3 text-right font-semibold">350 km</td>
+              <td class="p-3 text-right text-slate-500">~5.5 hrs</td>
+              <td class="p-3">Chinhoyi Hotel & Caves B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4000">KES 4,000</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 9 (Sun)</td>
+              <td class="p-3 font-medium">Chinhoyi ➔ Harare Bypass ➔ Masvingo (Great Zimbabwe)</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">420 km</td>
+              <td class="p-3 text-right text-slate-500">~6.0 hrs</td>
+              <td class="p-3">Great Zimbabwe Hotel / Masvingo B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4500">KES 4,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 10 (Mon)</td>
+              <td class="p-3 font-medium">Masvingo ➔ Beitbridge Border (Early Cross) ➔ Polokwane</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Beitbridge</span> (ZW/ZA)</td>
+              <td class="p-3 text-right font-semibold">430 km</td>
+              <td class="p-3 text-right text-slate-500">~6.5 hrs</td>
+              <td class="p-3">SleepOver Polokwane B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition bg-amber-50/30">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 11 (Tue)</td>
+              <td class="p-3 font-medium">Polokwane ➔ Nelspruit ➔ Oshoek Border ➔ Ezulwini Valley (Eswatini)</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Oshoek</span> (ZA/SZ)</td>
+              <td class="p-3 text-right font-semibold">390 km</td>
+              <td class="p-3 text-right text-slate-500">~5.5 hrs</td>
+              <td class="p-3">Mantenga Lodge / Ezulwini Hotel</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 12 (Wed)</td>
+              <td class="p-3 font-medium">Ezulwini ➔ Lavumisa Border ➔ St Lucia Wetlands (SA Coast)</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Lavumisa</span> (SZ/ZA)</td>
+              <td class="p-3 text-right font-semibold">380 km</td>
+              <td class="p-3 text-right text-slate-500">~5.0 hrs</td>
+              <td class="p-3">St Lucia Wetlands Guest House B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4500">KES 4,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 13 (Thu)</td>
+              <td class="p-3 font-medium">St Lucia ➔ Durban Expressway ➔ Port Shepstone / Wild Coast</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">320 km</td>
+              <td class="p-3 text-right text-slate-500">~4.5 hrs</td>
+              <td class="p-3">Coastline Villa B&B / Margate Hotel</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 14 (Fri)</td>
+              <td class="p-3 font-medium">Port Shepstone ➔ East London ➔ Port Elizabeth (Gqeberha)</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">580 km</td>
+              <td class="p-3 text-right text-slate-500">~7.5 hrs</td>
+              <td class="p-3">Ocean Breeze Hotel PE / City B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4500">KES 4,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 15 (Sat)</td>
+              <td class="p-3 font-medium">Port Elizabeth ➔ Tsitsikamma ➔ Knysna (Garden Route)</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">260 km</td>
+              <td class="p-3 text-right text-slate-500">~3.5 hrs</td>
+              <td class="p-3">Knysna Log Inn / Garden Route B&B</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 16 (Sun)</td>
+              <td class="p-3 font-medium">Knysna ➔ Hermanus Coastal Highway ➔ Cape Town ➔ <strong>Cape of Good Hope!</strong></td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold text-emerald-600">520 km</td>
+              <td class="p-3 text-right text-slate-500">~6.5 hrs</td>
+              <td class="p-3">Cape Town City Center B&B / Boutique Hotel</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="bg-purple-50/50 hover:bg-purple-50 transition border-l-4 border-l-purple-500">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-purple-900">Day 17 (Mon)</td>
+              <td class="p-3 font-semibold text-purple-900"><i class="fa-solid fa-camera text-purple-600 mr-1"></i> REST DAY 2: Cape Peninsula, Chapman's Peak Drive & Filming</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold text-purple-700">0 km</td>
+              <td class="p-3 text-right text-purple-600">Rest</td>
+              <td class="p-3">Cape Town City Center B&B / Boutique Hotel</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="bg-purple-50/50 hover:bg-purple-50 transition border-l-4 border-l-purple-500">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-purple-900">Day 18 (Tue)</td>
+              <td class="p-3 font-semibold text-purple-900"><i class="fa-solid fa-screwdriver-wrench text-purple-600 mr-1"></i> REST DAY 3: Table Mountain, V&A Waterfront & Vezel Oil Refresh</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold text-purple-700">0 km</td>
+              <td class="p-3 text-right text-purple-600">Rest</td>
+              <td class="p-3">Cape Town City Center B&B / Boutique Hotel</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+
+            <!-- NORTHBOUND -->
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 19 (Wed)</td>
+              <td class="p-3 font-medium">Cape Town ➔ N1 North through Karoo ➔ Beaufort West</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">390 km</td>
+              <td class="p-3 text-right text-slate-500">~4.5 hrs</td>
+              <td class="p-3">Matoppo Inn B&B Beaufort West</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 20 (Thu)</td>
+              <td class="p-3 font-medium">Beaufort West ➔ Kimberley ➔ Pioneer Gate Border ➔ Gaborone (Botswana)</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Pioneer Gate</span> (ZA/BW)</td>
+              <td class="p-3 text-right font-semibold">740 km</td>
+              <td class="p-3 text-right text-slate-500">~8.0 hrs</td>
+              <td class="p-3">The Studio Executive B&B Gaborone</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4800">KES 4,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 21 (Fri)</td>
+              <td class="p-3 font-medium">Gaborone ➔ Francistown ➔ Kazungula Bridge ➔ Livingstone (Zambia)</td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Kazungula</span> (BW/ZM)</td>
+              <td class="p-3 text-right font-semibold">820 km</td>
+              <td class="p-3 text-right text-slate-500">~9.5 hrs</td>
+              <td class="p-3">Livingstone Executive Lodge & Suites</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="bg-purple-50/50 hover:bg-purple-50 transition border-l-4 border-l-purple-500">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-purple-900">Day 22 (Sat)</td>
+              <td class="p-3 font-semibold text-purple-900"><i class="fa-solid fa-water text-purple-600 mr-1"></i> REST DAY 4: Victoria Falls, Zambezi Sunset Cruise & Final Prep</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold text-purple-700">0 km</td>
+              <td class="p-3 text-right text-purple-600">Rest</td>
+              <td class="p-3">Livingstone Executive Lodge & Suites</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="4200">KES 4,200</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 23 (Sun)</td>
+              <td class="p-3 font-medium">Livingstone ➔ Lusaka ➔ Great North Road ➔ Mpika</td>
+              <td class="p-3 text-slate-400">—</td>
+              <td class="p-3 text-right font-semibold">780 km</td>
+              <td class="p-3 text-right text-slate-500">~9.5 hrs</td>
+              <td class="p-3">Melisa Executive Lodge Mpika</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="3800">KES 3,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50/80 transition bg-emerald-50/30">
+              <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500"></td>
+              <td class="p-3 font-semibold text-slate-900">Day 24 (Mon)</td>
+              <td class="p-3 font-medium">Mpika ➔ Tunduma Border ➔ Mbeya ➔ Arusha ➔ <strong>Nairobi (HOME!)</strong></td>
+              <td class="p-3"><span class="font-semibold text-slate-800">Tunduma & Namanga</span></td>
+              <td class="p-3 text-right font-semibold text-emerald-700">1,120 km</td>
+              <td class="p-3 text-right text-slate-500">~14.0 hrs</td>
+              <td class="p-3 font-semibold text-emerald-700"><i class="fa-solid fa-house mr-1"></i> Home in Nairobi</td>
+              <td class="p-3 text-right font-medium text-slate-900" data-kes="0">KES 0</td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-slate-100 font-bold border-t border-slate-300 text-slate-900">
+            <tr>
+              <td colspan="4" class="p-3 text-right uppercase tracking-wider text-[11px] text-slate-500">Total Driving Distance & Lodging:</td>
+              <td class="p-3 text-right text-emerald-700 text-sm">11,820 km</td>
+              <td class="p-3 text-right text-slate-600 text-xs">~150 hrs</td>
+              <td class="p-3 text-slate-500 text-xs">23 Nights in Hotels/B&Bs</td>
+              <td class="p-3 text-right text-emerald-700 text-sm" id="itinerary-lodging-total" data-kes="98800">KES 98,800</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SHEET 2: BORDER DIRECTORY (9 POSTS) -->
+    <!-- ========================================== -->
+    <div id="sheet-borders" class="sheet-content hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-passport text-blue-600"></i>
+            Border Crossing Directory & Customs Matrix (9 Crossings)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Operating hours, fees, mandatory documents, and border-specific navigation advice.</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto custom-scrollbar">
+        <table id="table-borders" class="w-full text-left text-xs text-slate-700 border-collapse">
+          <thead class="bg-slate-100/80 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3">#</th>
+              <th class="p-3">Border Post</th>
+              <th class="p-3">Countries</th>
+              <th class="p-3">Hours</th>
+              <th class="p-3">Visa (KE)</th>
+              <th class="p-3">Vehicle Fees & Tolls</th>
+              <th class="p-3">Customs Documents</th>
+              <th class="p-3">Key Tips</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">1</td>
+              <td class="p-3 font-bold text-slate-900">Namanga</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Kenya ➔ Tanzania</span></td>
+              <td class="p-3">24 Hours (OSBP)</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">$25 Road Toll / USD</td>
+              <td class="p-3">Logbook, COMESA Yellow Card, CPD/TIP</td>
+              <td class="p-3 text-slate-600">One-Stop Border Post. Very fast processing.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">2</td>
+              <td class="p-3 font-bold text-slate-900">Songwe / Kasumulu</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Tanzania ➔ Malawi</span></td>
+              <td class="p-3">06:00 – 18:00</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">~20,000 MWK Carbon Tax</td>
+              <td class="p-3">Logbook, COMESA Yellow Card, TIP</td>
+              <td class="p-3 text-slate-600">Arrive before 16:00. Watch for currency touts.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">3</td>
+              <td class="p-3 font-bold text-slate-900">Mchinji / Mwami</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Malawi ➔ Zambia</span></td>
+              <td class="p-3">06:00 – 18:00 (OSBP)</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">$20 Carbon Tax + $30 Toll</td>
+              <td class="p-3">Logbook, COMESA Yellow Card, Council Levy</td>
+              <td class="p-3 text-slate-600">Modern OSBP facility. Card payments accepted.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">4</td>
+              <td class="p-3 font-bold text-slate-900">Chirundu Bridge</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Zambia ➔ Zimbabwe</span></td>
+              <td class="p-3">06:00 – 18:00 (OSBP)</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">$50 Bridge Toll & Carbon Tax</td>
+              <td class="p-3">Logbook, COMESA Card, CPD/TIP</td>
+              <td class="p-3 text-slate-600">Keep exact USD cash notes ready.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">5</td>
+              <td class="p-3 font-bold text-slate-900">Beitbridge</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Zimbabwe ➔ South Africa</span></td>
+              <td class="p-3">24 Hours</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">R300–R500 SA Road Levies</td>
+              <td class="p-3">Logbook, <strong>CPD (Carnet)</strong>, SA 3rd Party</td>
+              <td class="p-3 text-slate-600">Cross at 06:00 AM sharp to avoid truck congestion.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition bg-amber-50/40">
+              <td class="p-3 font-semibold">6</td>
+              <td class="p-3 font-bold text-slate-900">Oshoek / Ngwenya</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">South Africa ➔ Eswatini</span></td>
+              <td class="p-3">07:00 – 22:00</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">R100 Road Safety Fee</td>
+              <td class="p-3">Logbook, CPD/TIP, SA Insurance (valid in SZ)</td>
+              <td class="p-3 text-slate-600">Very scenic mountain pass. ZAR accepted 1:1.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition bg-amber-50/40">
+              <td class="p-3 font-semibold">7</td>
+              <td class="p-3 font-bold text-slate-900">Lavumisa / Golela</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Eswatini ➔ South Africa</span></td>
+              <td class="p-3">07:00 – 22:00</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">Standard SA Re-entry</td>
+              <td class="p-3">CPD stamped out of Eswatini, into SA</td>
+              <td class="p-3 text-slate-600">Exits directly into scenic St Lucia Wetlands / KZN coast.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">8</td>
+              <td class="p-3 font-bold text-slate-900">Pioneer Gate / Skilpadshek</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">South Africa ➔ Botswana</span></td>
+              <td class="p-3">06:00 – 00:00</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">~200 BWP Road Fund & Levy</td>
+              <td class="p-3">Logbook, CPD/TIP, Botswana Road Permit</td>
+              <td class="p-3 text-slate-600">Fast and professional. Pay Botswana fees by card.</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold">9</td>
+              <td class="p-3 font-bold text-slate-900">Kazungula Bridge</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold">Botswana ➔ Zambia</span></td>
+              <td class="p-3">06:00 – 22:00 (OSBP)</td>
+              <td class="p-3 text-emerald-600 font-semibold">Free ($0)</td>
+              <td class="p-3">$20 Bridge Toll + $30 Zambia Levy</td>
+              <td class="p-3">Logbook, CPD, COMESA Yellow Card</td>
+              <td class="p-3 text-slate-600">Iconic cable-stayed bridge. Great drone spot!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SHEET 3: PRE-TRIP CHECKLIST -->
+    <!-- ========================================== -->
+    <div id="sheet-checklist" class="sheet-content hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-emerald-600"></i>
+            Pre-Trip Preparedness Checklist
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Admin paperwork, Carnet vs TIP rules, original logbook safety, and medical mandates.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="text-xs text-slate-600 font-medium">Progress: <span id="checklist-progress" class="font-bold text-emerald-600">0%</span></div>
+          <div class="w-24 bg-slate-200 rounded-full h-2">
+            <div id="checklist-bar" class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <!-- Logbook Myth Banner -->
+        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-3">
+          <i class="fa-solid fa-shield-halved text-amber-600 text-lg mt-0.5"></i>
+          <div>
+            <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide">The Logbook Myth: What Really Happens at Borders</h4>
+            <p class="text-xs text-amber-800 mt-1">
+              <strong>Customs NEVER keeps your original vehicle logbook.</strong> Officials only inspect the original, verify the chassis/engine numbers against your car, stamp your TIP or CPD, and hand the logbook right back to you. Carry 10 photocopies in a dedicated folder.
+            </p>
+          </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SHEET 1: MASTER ITINERARY & DRIVING SCHEDULE -->
-        <!-- ========================================== -->
-        <section id="sheet-itinerary" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm flex-1 flex flex-col">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-3 no-print">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 1: Master Day-by-Day Driving Itinerary</h2>
-                    <span class="text-xs bg-slate-100 text-slate-600 border border-slate-300 px-2 py-0.5 rounded-full font-mono">20 Days • 13,500 km</span>
-                </div>
-                <div class="flex items-center gap-3 text-xs">
-                    <input type="text" id="itinerary-search" oninput="filterItinerary()" placeholder="Filter segment or border..." class="px-2.5 py-1 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 w-48">
-                    <span class="text-slate-500 font-mono">Progress: <span id="itinerary-progress-text" class="font-bold text-emerald-700">0/20 Days</span></span>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="border border-slate-200 rounded-xl p-4 space-y-2.5">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+              <i class="fa-solid fa-passport text-blue-600"></i> Essential Documentation
+            </h3>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>Carnet de Passages (CPD):</strong> Obtain from AA Kenya (Westlands / Hurlingham) for smooth SA/Botswana entry.</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>Original Logbook + 10 Copies:</strong> Must be in your name (or have formal bank/owner power of attorney).</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>COMESA Yellow Card:</strong> Valid for TZ, MW, ZM, ZW (Purchase from APA / Jubilee / AA Kenya).</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>International Driving Permit (IDP):</strong> Issued by AA Kenya alongside valid Kenyan smart driving licence.</span>
+            </label>
+          </div>
 
-            <!-- Spreadsheet Grid Table -->
-            <div class="overflow-x-auto border border-slate-300 rounded-md flex-1">
-                <table class="w-full text-xs text-left border-collapse" id="itinerary-table">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-300 font-mono">
-                            <th class="p-2 border-r border-slate-300 text-center w-10">Done</th>
-                            <th class="p-2 border-r border-slate-300 w-24">Day & Date</th>
-                            <th class="p-2 border-r border-slate-300 w-28">Status / Type</th>
-                            <th class="p-2 border-r border-slate-300">Driving Segment & Primary Border Crossing</th>
-                            <th class="p-2 border-r border-slate-300 text-right w-24">Dist (km)</th>
-                            <th class="p-2 border-r border-slate-300 text-right w-24">Drive Time</th>
-                            <th class="p-2 border-r border-slate-300">Vetted Accommodation & Wi-Fi Quality</th>
-                            <th class="p-2 text-right w-28">Est. Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 font-mono" id="itinerary-tbody">
-                        <!-- Populated dynamically by JavaScript -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="bg-slate-100 font-bold font-mono text-slate-800 border-t-2 border-slate-300">
-                            <td colspan="4" class="p-2.5 text-right border-r border-slate-300 uppercase tracking-wide">Grand Totals / Averages:</td>
-                            <td class="p-2.5 text-right border-r border-slate-300 text-emerald-800" id="itin-total-dist">13,500 km</td>
-                            <td class="p-2.5 text-right border-r border-slate-300" id="itin-total-time">~133.5 hrs</td>
-                            <td class="p-2.5 border-r border-slate-300 text-slate-500 text-[11px] font-normal">18 Lodging Nights Total</td>
-                            <td class="p-2.5 text-right text-emerald-800 font-bold" id="itin-total-cost">KES 52,000</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <p class="text-[11px] text-slate-500 mt-2 font-mono flex items-center gap-1">
-                <i class="fa-solid fa-circle-info text-blue-500"></i>
-                <span>Note: Check off completed days during your trip to auto-calculate remaining distance and nights.</span>
-            </p>
-        </section>
+          <div class="border border-slate-200 rounded-xl p-4 space-y-2.5">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+              <i class="fa-solid fa-heart-pulse text-rose-600"></i> Health & Travel Mandates
+            </h3>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>Yellow Fever Health Card:</strong> Strictly inspected at Songwe and Beitbridge.</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>Malaria Prophylaxis:</strong> Carry Malarone/Doxycycline + insect repellent for Lake Malawi and Zambezi legs.</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>International Travel Insurance:</strong> Comprehensive medical evacuation cover (e.g., AMREF Flying Doctors / World Nomads).</span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" onchange="updateChecklistProgress()" class="chk-item mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+              <span><strong>Emergency Cash Envelope:</strong> $400 in clean, uncreased USD bills (post-2013) + R2,000 South African Rand.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- ========================================== -->
-        <!-- SHEET 2: BORDER CROSSING DIRECTORY & MATRIX -->
-        <!-- ========================================== -->
-        <section id="sheet-borders" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between mb-3 no-print">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 2: Border Crossing Directory & Customs Matrix</h2>
-                    <span class="text-xs bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-full font-mono">9 Key Border Posts</span>
-                </div>
-                <div class="text-xs text-slate-500">
-                    <span class="text-emerald-700 font-bold"><i class="fa-solid fa-check-circle"></i> 100% Visa-Free</span> for Kenyan Passport Holders
-                </div>
-            </div>
+    <!-- ========================================== -->
+    <!-- SHEET 4: STOCK VEZEL SPARES -->
+    <!-- ========================================== -->
+    <div id="sheet-spares" class="sheet-content hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-wrench text-amber-600"></i>
+            Stock Vezel Hybrid (2017) Spares & Gear List
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Zero vehicle modifications needed — essential OEM consumables, hybrid duct filters, and recovery kit.</p>
+        </div>
+      </div>
 
-            <div class="overflow-x-auto border border-slate-300 rounded-md">
-                <table class="w-full text-xs text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-300 font-mono">
-                            <th class="p-2.5 border-r border-slate-300 w-44">Crossing Point</th>
-                            <th class="p-2.5 border-r border-slate-300 w-36">Countries Connected</th>
-                            <th class="p-2.5 border-r border-slate-300 w-28">Operating Hours</th>
-                            <th class="p-2.5 border-r border-slate-300 w-48">Vehicle Entry & Toll Fees</th>
-                            <th class="p-2.5 border-r border-slate-300 w-48">Mandatory Paperwork</th>
-                            <th class="p-2.5">Pro-Tips & Overland Logistics</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200" id="borders-tbody">
-                        <!-- Populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+      <div class="overflow-x-auto custom-scrollbar">
+        <table id="table-spares" class="w-full text-left text-xs text-slate-700 border-collapse">
+          <thead class="bg-slate-100/80 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3">Category</th>
+              <th class="p-3">Item Description</th>
+              <th class="p-3">Quantity / Spec</th>
+              <th class="p-3">Why It's Critical</th>
+              <th class="p-3 text-right">Est. Cost (KES)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-emerald-800 bg-emerald-50/40">Tires & Wheels</td>
+              <td class="p-3 font-medium text-slate-900">2x Full-Sized Spare Wheels</td>
+              <td class="p-3">215/60 R16 or 215/55 R17</td>
+              <td class="p-3 text-slate-600">Vezel only comes with a tire sealant kit. Remote potholes can destroy sidewalls.</td>
+              <td class="p-3 text-right font-medium">KES 18,000</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-emerald-800 bg-emerald-50/40">Tires & Wheels</td>
+              <td class="p-3 font-medium text-slate-900">12V Heavy-Duty Air Compressor + Plug Kit</td>
+              <td class="p-3">T-handle reamer + 20 plugs</td>
+              <td class="p-3 text-slate-600">Allows roadside puncture fixes in 5 minutes without removing the wheel.</td>
+              <td class="p-3 text-right font-medium">KES 4,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-blue-800 bg-blue-50/40">Fluids & Engine</td>
+              <td class="p-3 font-medium text-slate-900">Synthetic Engine Oil (0W-20 / 5W-30)</td>
+              <td class="p-3">1x 4L Can + 1L top-up</td>
+              <td class="p-3 text-slate-600">Mid-trip oil refresh in Cape Town after 5,500 km of high-temperature driving.</td>
+              <td class="p-3 text-right font-medium">KES 6,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-blue-800 bg-blue-50/40">Fluids & Engine</td>
+              <td class="p-3 font-medium text-slate-900">OEM Engine Air & Cabin Filters</td>
+              <td class="p-3">2x Air Filters, 1x Cabin Filter</td>
+              <td class="p-3 text-slate-600">Dusty trucks on Great North Road clog filters, reducing hybrid fuel efficiency.</td>
+              <td class="p-3 text-right font-medium">KES 3,800</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-purple-800 bg-purple-50/40">Hybrid Specific</td>
+              <td class="p-3 font-medium text-slate-900">Hybrid Battery Cooling Duct Filter</td>
+              <td class="p-3">1x Under-seat mesh filter</td>
+              <td class="p-3 text-slate-600">Prevents hybrid high-voltage battery overheating during hot Karoo/Kalahari stretches.</td>
+              <td class="p-3 text-right font-medium">KES 1,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-purple-800 bg-purple-50/40">Hybrid Specific</td>
+              <td class="p-3 font-medium text-slate-900">OBD2 Bluetooth Diagnostic Scanner</td>
+              <td class="p-3">ELM327 / Car Scanner App</td>
+              <td class="p-3 text-slate-600">Instantly read and clear DCT or hybrid battery sensor codes on your phone.</td>
+              <td class="p-3 text-right font-medium">KES 2,500</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-amber-800 bg-amber-50/40">Electrical & Tools</td>
+              <td class="p-3 font-medium text-slate-900">Portable Lithium Jump Starter</td>
+              <td class="p-3">12,000mAh with USB output</td>
+              <td class="p-3 text-slate-600">Jumps the Vezel's small auxiliary 12V battery if cameras drain it overnight.</td>
+              <td class="p-3 text-right font-medium">KES 6,000</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-semibold text-amber-800 bg-amber-50/40">Emergency Gear</td>
+              <td class="p-3 font-medium text-slate-900">2x High-Vis Vests & 2x Warning Triangles</td>
+              <td class="p-3">SADC Standard Compliant</td>
+              <td class="p-3 text-slate-600">Strictly inspected by highway police in Zambia, Zimbabwe, and Botswana.</td>
+              <td class="p-3 text-right font-medium">KES 2,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-            <!-- Extra Border Pro-Tips Banner -->
-            <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 flex items-start gap-3">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base mt-0.5"></i>
-                <div>
-                    <h4 class="font-bold text-amber-950">Crucial Customs Safeguard Reminder:</h4>
-                    <p class="mt-0.5">Border officials will inspect and photocopy your original Kenyan logbook to verify engine/chassis numbers. <strong>They do NOT keep your original logbook.</strong> Never leave any border window without your original logbook in hand!</p>
-                </div>
-            </div>
-        </section>
+    <!-- ========================================== -->
+    <!-- SHEET 5: LIVE BUDGET CALCULATOR (KES 300K) -->
+    <!-- ========================================== -->
+    <div id="sheet-budget" class="sheet-content hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-wallet text-emerald-600"></i>
+            Live Expedition Budget Calculator (Strict KES 300,000 Cap)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Adjust fuel economy, petrol prices, or night rates to see dynamic cost distributions in real time.</p>
+        </div>
+      </div>
 
-        <!-- ========================================== -->
-        <!-- SHEET 3: PRE-TRIP LEGAL & ADMIN CHECKLIST -->
-        <!-- ========================================== -->
-        <section id="sheet-checklist" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between mb-3 no-print">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 3: Pre-Trip Legal & Administrative Preparedness</h2>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-48 bg-slate-200 rounded-full h-3 overflow-hidden border border-slate-300">
-                        <div id="checklist-progress-bar" class="bg-emerald-600 h-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                    <span id="checklist-progress-text" class="text-xs font-mono font-bold text-emerald-700">0% Done</span>
-                </div>
-            </div>
+      <div class="p-5 space-y-6">
+        <!-- Interactive Parameters Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+          <div>
+            <label class="font-semibold text-slate-700 block mb-1">Total Trip Distance (km)</label>
+            <input type="number" id="calc-km" value="13000" oninput="recalculateBudget()" class="w-full px-3 py-1.5 rounded border border-slate-300 font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500">
+            <span class="text-[10px] text-slate-500">11,820km highway + 1,180km buffer</span>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700 block mb-1">Hybrid Consumption (km/L)</label>
+            <input type="number" id="calc-kml" value="19.0" step="0.5" oninput="recalculateBudget()" class="w-full px-3 py-1.5 rounded border border-slate-300 font-semibold text-emerald-700 focus:ring-2 focus:ring-emerald-500">
+            <span class="text-[10px] text-slate-500">Vezel i-DCD actual touring rate</span>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700 block mb-1">Avg. Regional Petrol (KES / L)</label>
+            <input type="number" id="calc-fuel-price" value="214" oninput="recalculateBudget()" class="w-full px-3 py-1.5 rounded border border-slate-300 font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500">
+            <span class="text-[10px] text-slate-500">Regional fuel average (KES 214/L)</span>
+          </div>
+        </div>
 
-            <div class="grid md:grid-cols-2 gap-4" id="checklist-container">
-                <!-- Checklist Cards inserted via JS -->
-            </div>
-        </section>
+        <!-- Budget Table -->
+        <div class="overflow-x-auto custom-scrollbar">
+          <table id="table-budget" class="w-full text-left text-xs text-slate-700 border-collapse">
+            <thead class="bg-slate-100/80 text-slate-700 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="p-3">Expense Category</th>
+                <th class="p-3">Itemized Breakdown & Formula</th>
+                <th class="p-3 text-right">KES Allocation</th>
+                <th class="p-3 text-right">USD Equiv. ($)</th>
+                <th class="p-3 text-right">% of Budget</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900"><i class="fa-solid fa-gas-pump text-emerald-600 mr-2"></i> Hybrid Petrol / Fuel</td>
+                <td class="p-3 text-slate-600"><span id="calc-liters-used">684</span> Liters @ KES <span id="calc-fuel-unit">214</span>/L (19 km/L touring efficiency)</td>
+                <td class="p-3 text-right font-bold text-emerald-700" id="cost-fuel">KES 146,376</td>
+                <td class="p-3 text-right text-slate-600" id="cost-fuel-usd">$1,135</td>
+                <td class="p-3 text-right font-semibold text-slate-700" id="pct-fuel">48.8%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900"><i class="fa-solid fa-hotel text-blue-600 mr-2"></i> Private B&Bs & Hotels (23 Nights)</td>
+                <td class="p-3 text-slate-600">23 Nights at private budget B&Bs and boutique hotels (Avg ~KES 4,200/night)</td>
+                <td class="p-3 text-right font-bold text-slate-900" id="cost-lodging">KES 98,800</td>
+                <td class="p-3 text-right text-slate-600" id="cost-lodging-usd">$766</td>
+                <td class="p-3 text-right font-semibold text-slate-700" id="pct-lodging">32.9%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900"><i class="fa-solid fa-utensils text-amber-600 mr-2"></i> Food & Dining</td>
+                <td class="p-3 text-slate-600">24 Days @ ~KES 1,250/day (Supermarket self-catering + B&B breakfast)</td>
+                <td class="p-3 text-right font-bold text-slate-900" id="cost-food">KES 30,000</td>
+                <td class="p-3 text-right text-slate-600" id="cost-food-usd">$233</td>
+                <td class="p-3 text-right font-semibold text-slate-700" id="pct-food">10.0%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900"><i class="fa-solid fa-passport text-purple-600 mr-2"></i> Border Levies, Carbon Tax & Tolls</td>
+                <td class="p-3 text-slate-600">9 Borders ($0 Visas) + COMESA Yellow Card + Bridge tolls + SA levies</td>
+                <td class="p-3 text-right font-bold text-slate-900" id="cost-borders">KES 18,000</td>
+                <td class="p-3 text-right text-slate-600" id="cost-borders-usd">$140</td>
+                <td class="p-3 text-right font-semibold text-slate-700" id="pct-borders">6.0%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900"><i class="fa-solid fa-shield-cat text-indigo-600 mr-2"></i> Emergency Buffer & Local eSIMs</td>
+                <td class="p-3 text-slate-600">Emergency contingency fund, local eSIM data packages, road safety buffer</td>
+                <td class="p-3 text-right font-bold text-slate-900" id="cost-contingency">KES 6,824</td>
+                <td class="p-3 text-right text-slate-600" id="cost-contingency-usd">$52</td>
+                <td class="p-3 text-right font-semibold text-slate-700" id="pct-contingency">2.3%</td>
+              </tr>
+            </tbody>
+            <tfoot class="bg-slate-900 text-white font-bold text-sm">
+              <tr>
+                <td colspan="2" class="p-3.5 uppercase tracking-wider text-xs">Total Expedition Spend:</td>
+                <td class="p-3.5 text-right text-emerald-400" id="calc-grand-total">KES 300,000</td>
+                <td class="p-3.5 text-right text-slate-300" id="calc-grand-total-usd">$2,326</td>
+                <td class="p-3.5 text-right text-emerald-400">100.0%</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
 
-        <!-- ========================================== -->
-        <!-- SHEET 4: VEZEL SPARES & RECOVERY GEAR -->
-        <!-- ========================================== -->
-        <section id="sheet-spares" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between mb-3 no-print">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 4: Stock Honda Vezel Spares & Emergency Gear</h2>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-mono">Stock Hybrid Specific</span>
-                </div>
-            </div>
+    <!-- ========================================== -->
+    <!-- SHEET 6: YOUTUBE & TIKTOK CONTENT PLAN -->
+    <!-- ========================================== -->
+    <div id="sheet-content" class="sheet-content hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-video text-rose-600"></i>
+            YouTube & TikTok Content Production Blueprint
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Series Title: <em>"Can I Vezel to Cape of Good Hope?"</em> — Episode arcs, hooks, and video angles.</p>
+        </div>
+      </div>
 
-            <div class="grid md:grid-cols-2 gap-4" id="spares-container">
-                <!-- Spares checklists loaded by JS -->
-            </div>
-        </section>
+      <div class="p-5 space-y-5">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table id="table-episodes" class="w-full text-left text-xs text-slate-700 border-collapse">
+            <thead class="bg-slate-100/80 text-slate-700 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="p-3">Episode #</th>
+                <th class="p-3">YouTube Title Hook</th>
+                <th class="p-3">Key Storyline & Content Tension</th>
+                <th class="p-3">TikTok / Reels Short Angle</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-rose-600">Ep. 1</td>
+                <td class="p-3 font-semibold text-slate-900">"Driving a 1.5L Hybrid Crossover 2,000km to Lake Malawi!"</td>
+                <td class="p-3 text-slate-600">The launch in Nairobi, clearing Namanga & Songwe borders, tracking 19km/L fuel economy on Tanzania's Great North Road.</td>
+                <td class="p-3">"People said I couldn't road trip Africa in a Vezel... here's Day 1."</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-rose-600">Ep. 2</td>
+                <td class="p-3 font-semibold text-slate-900">"The Chirundu Zambezi Bridge & Crossing Beitbridge at 6 AM"</td>
+                <td class="p-3 text-slate-600">Navigating Zimbabwe, Great Zimbabwe ruins, the Beitbridge customs frenzy, entering South Africa smoothly with CPD.</td>
+                <td class="p-3">"Surviving the busiest border post in Southern Africa with a Kenyan car."</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-amber-50/30">
+                <td class="p-3 font-bold text-rose-600">Ep. 3</td>
+                <td class="p-3 font-semibold text-slate-900">"Detour Through a Mountain Kingdom: Driving Eswatini in a Day"</td>
+                <td class="p-3 text-slate-600">Crossing Oshoek into Ezulwini Valley, granite mountain passes, cultural markets, exit to SA St Lucia wetlands coast.</td>
+                <td class="p-3">"Why you should never skip Eswatini on an African road trip."</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-rose-600">Ep. 4</td>
+                <td class="p-3 font-semibold text-slate-900">"Driving the Garden Route & Tsitsikamma Coast to Cape Town"</td>
+                <td class="p-3 text-slate-600">Driving along the Indian Ocean, Knysna lagoon, Hermanus coastal passes, arriving into Cape Town.</td>
+                <td class="p-3">"The most beautiful highway drive in Africa: Garden Route in a Hybrid!"</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-emerald-50/40">
+                <td class="p-3 font-bold text-emerald-700">Ep. 5 (FINALE 1)</td>
+                <td class="p-3 font-bold text-slate-900">"WE MADE IT! A Nairobi Honda Vezel Reaches Cape of Good Hope!"</td>
+                <td class="p-3 text-slate-600">The iconic moment at the Cape of Good Hope sign, Chapmans Peak Drive, Table Mountain cableway, drone beauty shots.</td>
+                <td class="p-3">"6,000 km from Nairobi to the southwestern tip of Africa in a hybrid!"</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-rose-600">Ep. 6</td>
+                <td class="p-3 font-semibold text-slate-900">"Driving Past Wild Elephants in Botswana & The $260M Kazungula Bridge"</td>
+                <td class="p-3 text-slate-600">Kalahari highway, wildlife sightings right off the tarmac, crossing the 4-country Zambezi bridge into Zambia.</td>
+                <td class="p-3">"Seeing wild elephants from my Vezel window in Botswana!"</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-rose-600">Ep. 7</td>
+                <td class="p-3 font-semibold text-slate-900">"Victoria Falls Smoke That Thunders & The 2,000km Dash Home"</td>
+                <td class="p-3 text-slate-600">Livingstone waterfalls, sunset Zambezi cruise, marathon drive across Zambia and Tanzania, final arrival back in Nairobi.</td>
+                <td class="p-3">"Total cost, fuel used, and repairs: Did the Vezel survive 12,000 km?"</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-        <!-- ========================================== -->
-        <!-- SHEET 5: LIVE FINANCIAL BUDGET CALCULATOR -->
-        <!-- ========================================== -->
-        <section id="sheet-budget" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between mb-4 no-print">
-                <div>
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 5: Interactive Financial Budget & Cost Calculator</h2>
-                    <p class="text-xs text-slate-500">Adjust fuel prices and parameters below to simulate exact expenses against your KES 300,000 cap.</p>
-                </div>
-                <button onclick="resetBudgetCalculator()" class="text-xs text-slate-600 hover:text-emerald-700 font-medium underline">Reset Defaults</button>
-            </div>
+  </main>
 
-            <!-- Interactive Parameter Sliders / Inputs -->
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 grid md:grid-cols-3 gap-4 font-mono text-xs no-print">
-                <div>
-                    <label class="block text-slate-600 mb-1 font-semibold">Petrol Price per Liter (KES):</label>
-                    <div class="flex items-center gap-2">
-                        <input type="number" id="calc-fuel-price" value="175" oninput="updateBudgetCalc()" class="w-24 p-1.5 border border-slate-300 rounded text-right font-bold text-slate-800">
-                        <span class="text-slate-500">KES / L</span>
-                    </div>
-                </div>
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 space-y-2">
+      <p class="font-medium text-slate-300">"Can I Vezel to Cape of Good Hope?" Master Expedition Document & Spreadsheet</p>
+      <p class="text-[11px] text-slate-500">100% Visa-Free for Kenyan Passports | 24-Day Paced Schedule | KES 300,000 Cap | 19 km/L Hybrid Economy</p>
+    </div>
+  </footer>
 
-                <div>
-                    <label class="block text-slate-600 mb-1 font-semibold">Vezel Fuel Economy:</label>
-                    <div class="flex items-center gap-2">
-                        <input type="number" id="calc-fuel-efficiency" value="20" step="0.5" oninput="updateBudgetCalc()" class="w-24 p-1.5 border border-slate-300 rounded text-right font-bold text-slate-800">
-                        <span class="text-slate-500">km / L</span>
-                    </div>
-                </div>
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ========================================== -->
+  <script>
+    // State Variables
+    let currentCurrency = 'KES';
+    const KES_TO_USD = 129.0;
 
-                <div>
-                    <label class="block text-slate-600 mb-1 font-semibold">Total Trip Distance (inc. buffer):</label>
-                    <div class="flex items-center gap-2">
-                        <input type="number" id="calc-total-distance" value="13500" oninput="updateBudgetCalc()" class="w-28 p-1.5 border border-slate-300 rounded text-right font-bold text-slate-800">
-                        <span class="text-slate-500">km</span>
-                    </div>
-                </div>
-            </div>
+    // Switch Visible Tab
+    function switchTab(sheetId) {
+      document.querySelectorAll('.sheet-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-600', 'text-white');
+        btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+      });
 
-            <!-- Budget Table Breakdown -->
-            <div class="overflow-x-auto border border-slate-300 rounded-md">
-                <table class="w-full text-xs text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-300 font-mono">
-                            <th class="p-2.5 border-r border-slate-300">Expense Category</th>
-                            <th class="p-2.5 border-r border-slate-300">Calculation Basis & Cost-Saving Hacks</th>
-                            <th class="p-2.5 border-r border-slate-300 text-right w-32">Est. Cost (KES)</th>
-                            <th class="p-2.5 text-right w-28">Est. Cost (USD)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 font-mono" id="budget-tbody">
-                        <!-- Populated dynamically -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="bg-emerald-900 text-white font-bold font-mono text-sm">
-                            <td class="p-3 border-r border-emerald-800 uppercase">TOTAL EXPENSE BUDGET:</td>
-                            <td class="p-3 border-r border-emerald-800 text-xs font-normal text-emerald-200" id="budget-variance-text">Within KES 300,000 Budget Cap!</td>
-                            <td class="p-3 text-right border-r border-emerald-800 text-emerald-300" id="budget-calc-total-kes">KES 300,000</td>
-                            <td class="p-3 text-right text-emerald-300" id="budget-calc-total-usd">$2,308</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+      const activeSheet = document.getElementById('sheet-' + sheetId);
+      const activeBtn = document.getElementById('tab-' + sheetId);
+      if (activeSheet) activeSheet.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+        activeBtn.classList.add('bg-emerald-600', 'text-white');
+      }
+    }
 
-            <!-- Visual Budget Allocation Progress -->
-            <div class="mt-4 bg-slate-50 border border-slate-200 rounded-lg p-3">
-                <div class="text-xs font-bold text-slate-700 mb-2">Budget Utilization Bar vs KES 300,000 Limit</div>
-                <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden border border-slate-300 flex">
-                    <div id="bar-fuel" class="bg-blue-600 h-full" style="width: 39%" title="Fuel"></div>
-                    <div id="bar-lodging" class="bg-emerald-600 h-full" style="width: 17%" title="Accommodation"></div>
-                    <div id="bar-borders" class="bg-amber-500 h-full" style="width: 12%" title="Borders & Tolls"></div>
-                    <div id="bar-food" class="bg-purple-600 h-full" style="width: 10%" title="Food"></div>
-                    <div id="bar-com" class="bg-cyan-500 h-full" style="width: 5%" title="COMESA/Insurance"></div>
-                    <div id="bar-buffer" class="bg-slate-400 h-full" style="width: 17%" title="Contingency"></div>
-                </div>
-                <div class="flex flex-wrap items-center justify-between gap-2 mt-2 text-[11px] font-mono text-slate-600">
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span> Fuel (39.3%)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span> Lodging (17.3%)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> Borders/Tolls (11.7%)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 inline-block"></span> Food (10.0%)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500 inline-block"></span> COMESA (5.0%)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block"></span> Contingency (16.7%)</span>
-                </div>
-            </div>
-        </section>
+    // Toggle Currency (KES <-> USD)
+    function toggleCurrency() {
+      currentCurrency = currentCurrency === 'KES' ? 'USD' : 'KES';
+      document.getElementById('currentCurrencyLabel').innerText = currentCurrency;
 
-        <!-- ========================================== -->
-        <!-- SHEET 6: TIKTOK & YOUTUBE CONTENT PLANNER -->
-        <!-- ========================================== -->
-        <section id="sheet-content" class="tab-content bg-white border border-slate-300 rounded-b-lg p-4 shadow-sm hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between mb-3 no-print">
-                <div class="flex items-center gap-2">
-                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Sheet 6: TikTok & YouTube Mini-Series Content Planner</h2>
-                    <span class="text-xs bg-red-100 text-red-800 border border-red-200 px-2 py-0.5 rounded-full font-mono">"Can I Vezel to Cape of Good Hope?"</span>
-                </div>
-            </div>
-
-            <!-- Episode Tracker Table -->
-            <div class="overflow-x-auto border border-slate-300 rounded-md mb-4">
-                <table class="w-full text-xs text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-300 font-mono">
-                            <th class="p-2.5 border-r border-slate-300 w-16">Ep #</th>
-                            <th class="p-2.5 border-r border-slate-300 w-64">Episode Title & Concept</th>
-                            <th class="p-2.5 border-r border-slate-300">Key Filming Locations & Narrative Hooks</th>
-                            <th class="p-2.5 border-r border-slate-300 w-32">Status</th>
-                            <th class="p-2.5 text-center w-20">Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 font-mono" id="episodes-tbody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Filming Gear Checklist -->
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera text-red-600"></i> Recommended Content Gear List
-                </h3>
-                <div class="grid md:grid-cols-3 gap-3 text-xs" id="gear-checklist">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Application Logic Scripts -->
-    <script>
-        const USD_EXCHANGE_RATE = 130; // 1 USD = 130 KES
-        let activeCurrency = 'KES';
-
-        // Master Itinerary Data Array
-        const itineraryData = [
-            { day: "Day 1 (Sat)", week: "Weekend 1", status: "Driving Launch", segment: "Nairobi ➔ Iringa (Border: Namanga — KE/TZ)", km: 820, time: "11 hrs", hotel: "Safari Junction Backpackers", costKes: 2600, done: false },
-            { day: "Day 2 (Sun)", week: "Weekend 1", status: "Southbound Push", segment: "Iringa ➔ Lake Malawi (Border: Songwe — TZ/MW)", km: 650, time: "9 hrs", hotel: "Mayoka Village Lodge", costKes: 2600, done: false },
-            { day: "Day 3 (Mon)", week: "PTO Day 1", status: "REST DAY 1", segment: "REST DAY 1: Lake Malawi (Karonga / Nkhata Bay)", km: 0, time: "0 hrs", hotel: "Mayoka Village Lodge", costKes: 2600, done: false },
-            { day: "Day 4 (Tue)", week: "PTO Day 2", status: "Driving Leg", segment: "Lake Malawi ➔ Lusaka (Border: Mchinji — MW/ZM)", km: 850, time: "11 hrs", hotel: "Lusaka Backpackers / Kalulu", costKes: 2600, done: false },
-            { day: "Day 5 (Wed)", week: "PTO Day 3", status: "Driving Leg", segment: "Lusaka ➔ Harare (Border: Chirundu — ZM/ZW)", km: 490, time: "7 hrs", hotel: "Small World Backpackers Harare", costKes: 3200, done: false },
-            { day: "Day 6 (Thu)", week: "PTO Day 4", status: "Driving Leg", segment: "Harare ➔ Polokwane (Border: Beitbridge — ZW/ZA)", km: 580, time: "8.5 hrs", hotel: "SleepOver Polokwane B&B", costKes: 3900, done: false },
-            { day: "Day 7 (Fri)", week: "PTO Day 5", status: "Driving Leg", segment: "Polokwane ➔ Port Elizabeth (via Eswatini Detour)", km: 920, time: "10 hrs", hotel: "Lungile Backpackers", costKes: 2800, done: false },
-            { day: "Day 8 (Sat)", week: "Weekend 2", status: "Coastal Sprint", segment: "Port Elizabeth ➔ Cape Town (N2 Highway)", km: 750, time: "8.5 hrs", hotel: "91 Loop Boutique Hostel", costKes: 2800, done: false },
-            { day: "Day 9 (Sun)", week: "Weekend 2", status: "MILESTONE DAY", segment: "Cape Town ➔ Cape of Good Hope Sign!", km: 120, time: "3 hrs", hotel: "91 Loop Boutique Hostel", costKes: 2800, done: false },
-            { day: "Day 10 (Mon)", week: "PTO Day 6", status: "REST DAY 2", segment: "REST DAY 2: Cape Town & Vehicle Check", km: 0, time: "0 hrs", hotel: "91 Loop Boutique Hostel", costKes: 2800, done: false },
-            { day: "Day 11 (Tue)", week: "PTO Day 7", status: "Northbound Push", segment: "Cape Town ➔ Beaufort West (Great Karoo)", km: 460, time: "5 hrs", hotel: "Wagon Wheel Country Lodge", costKes: 4800, done: false },
-            { day: "Day 12 (Wed)", week: "PTO Day 8", status: "Driving Leg", segment: "Beaufort West ➔ Francistown (Border: Pioneer Gate — ZA/BW)", km: 1020, time: "11.5 hrs", hotel: "Satellite Guest House B&B", costKes: 4500, done: false },
-            { day: "Day 13 (Thu)", week: "PTO Day 9", status: "Driving Leg", segment: "Francistown ➔ Victoria Falls (Border: Kazungula — BW/ZM)", km: 520, time: "6.5 hrs", hotel: "Fawlty Towers Livingstone", costKes: 5500, done: false },
-            { day: "Day 14 (Fri)", week: "PTO Day 10", status: "REST DAY 3", segment: "REST DAY 3: Victoria Falls / Livingstone", km: 0, time: "0 hrs", hotel: "Fawlty Towers Livingstone", costKes: 5500, done: false },
-            { day: "Day 15 (Sat)", week: "Weekend 3", status: "Homeward Blitz", segment: "Livingstone ➔ Serenje / Mpika (Zambia)", km: 800, time: "10 hrs", hotel: "Chitimukulu Executive Lodge", costKes: 3500, done: false },
-            { day: "Day 16 (Sun)", week: "Weekend 3", status: "Homeward Blitz", segment: "Mpika ➔ Mbeya (Border: Nakonde/Tunduma — ZM/TZ)", km: 700, time: "9 hrs", hotel: "Utengule Coffee Lodge", costKes: 3500, done: false },
-            { day: "Day 17 (Mon)", week: "PTO Day 11", status: "Driving Leg", segment: "Mbeya ➔ Dodoma (Tanzania Highway)", km: 650, time: "8.5 hrs", hotel: "Dodoma Hotel / B&B", costKes: 3200, done: false },
-            { day: "Day 18 (Tue)", week: "PTO Day 12", status: "Driving Leg", segment: "Dodoma ➔ Arusha", km: 450, time: "6 hrs", hotel: "Arusha Villa Hotel", costKes: 3200, done: false },
-            { day: "Day 19 (Wed)", week: "PTO Day 13", status: "HOME ARRIVAL", segment: "Arusha ➔ Nairobi HOME! (Border: Namanga)", km: 280, time: "4.5 hrs", hotel: "Home in Nairobi", costKes: 0, done: false },
-            { day: "Day 20 (Thu)", week: "PTO Day 14", status: "RECOVERY DAY", segment: "Buffer / Unwind Day at Home in Nairobi", km: 0, time: "0 hrs", hotel: "Home in Nairobi", costKes: 0, done: false }
-        ];
-
-        // Border Crossing Directory Data
-        const borderData = [
-            { point: "1. Namanga", countries: "Kenya ↔ Tanzania", hours: "24 Hours", fees: "~$25 USD Road Toll + $20 TIP", docs: "Passport, COMESA Card, Logbook, CPD/TIP", tips: "One-Stop Border Post (OSBP). Fast processing under 45 mins." },
-            { point: "2. Kasumulu / Songwe", countries: "Tanzania ↔ Malawi", hours: "06:00 – 18:00", fees: "~$20 USD TIP + Road Tax", docs: "Passport, COMESA Card, Logbook, CPD", tips: "Cash USD needed for Malawi road tax. Closes strictly at 18:00!" },
-            { point: "3. Mchinji / Chipata", countries: "Malawi ↔ Zambia", hours: "06:00 – 18:00", fees: "~$20 USD Carbon Tax + $15 Council Fee", docs: "Passport, COMESA Card, Logbook, CPD", tips: "OSBP system. Quick crossing. Ensure COMESA is stamped." },
-            { point: "4. Chirundu", countries: "Zambia ↔ Zimbabwe", hours: "06:00 – 22:00", fees: "~$30 USD Bridge Toll + $20 Carbon Tax", docs: "Passport, COMESA Card, Logbook, CPD", tips: "Heavy truck traffic. Arrive early morning to skip freight lines." },
-            { point: "5. Beitbridge", countries: "Zimbabwe ↔ South Africa", hours: "24 Hours", fees: "~$20 USD Bridge Fee + SA Insurance", docs: "Passport, Carnet (CPD Mandatory), Logbook", tips: "Busy border in Africa. Use CPD to avoid high cash security deposits." },
-            { point: "6. Oshoek / Lavumisa", countries: "South Africa ↔ Eswatini", hours: "07:00 – 22:00", fees: "~R100 ZAR Road Safety Levy", docs: "Passport, CPD/TIP, SA Cross Border Permit", tips: "SA Rand (ZAR) accepted directly at border. Very smooth." },
-            { point: "7. Pioneer Gate", countries: "South Africa ↔ Botswana", hours: "06:00 – 22:00", fees: "~300 BWP (~$22 USD) Carbon Levy", docs: "Passport, CPD/TIP, 3rd Party Insurance", tips: "Extremely calm border. Credit Cards or BWP accepted." },
-            { point: "8. Kazungula Bridge", countries: "Botswana ↔ Zambia", hours: "06:00 – 22:00", fees: "~$20 USD Bridge Toll + Carbon Tax", docs: "Passport, COMESA Card, Logbook, CPD", tips: "Scenic curved cable bridge over Zambezi River! Great video shot." },
-            { point: "9. Nakonde / Tunduma", countries: "Zambia ↔ Tanzania", hours: "06:00 – 18:00", fees: "~$25 USD Tanzania Road Toll", docs: "Passport, COMESA Card, Logbook, CPD", tips: "Heavy truck traffic. Arrive by 07:00 AM to beat long transport queues." }
-        ];
-
-        // Pre-trip Checklist Data
-        const checklistData = [
-            {
-                category: "📄 Administrative & Legal Paperwork",
-                items: [
-                    { id: "c1", text: "Carnet de Passages en Douane (CPD) applied via AA Kenya", done: false },
-                    { id: "c2", text: "Original Logbook verified in driver's name (or bank authorization letter)", done: false },
-                    { id: "c3", text: "COMESA Yellow Card Insurance purchased (covers KE, TZ, MW, ZM, ZW)", done: false },
-                    { id: "c4", text: "International Driving Permit (IDP) obtained from AA Kenya", done: false },
-                    { id: "c5", text: "Passport valid for 6+ months with 8+ blank visa pages", done: false },
-                    { id: "c6", text: "Yellow Fever Vaccination Certificate stamped & packed", done: false }
-                ]
-            },
-            {
-                category: "🛠️ Stock Vehicle Prep & Accessories",
-                items: [
-                    { id: "c7", text: "Aftermarket metal engine skid plate / sump guard installed", done: false },
-                    { id: "c8", text: "Dual full-sized spare wheels (215/55R17) mounted & secured", done: false },
-                    { id: "c9", text: "Hybrid battery duct intake filter cleaned / replaced", done: false },
-                    { id: "c10", text: "Fresh synthetic engine oil (0W-20 / 5W-30) + 2 spare filters packed", done: false },
-                    { id: "c11", text: "3x spare engine air filters & 2x cabin filters packed", done: false },
-                    { id: "c12", text: "12V Heavy-Duty air compressor & tire plug kit packed", done: false }
-                ]
-            }
-        ];
-
-        // Spares & Gear Data
-        const sparesData = [
-            {
-                category: "🧰 Mechanical Spares & Maintenance",
-                items: [
-                    { name: "5L Synthetic Engine Oil (0W-20/5W-30)", qty: "1 Canister", status: "Packed" },
-                    { name: "Genuine Honda Oil Filters", qty: "2 Units", status: "Packed" },
-                    { name: "Engine Air Filters (Dust protection)", qty: "3 Units", status: "Packed" },
-                    { name: "Cabin Dust Filters", qty: "2 Units", status: "Packed" },
-                    { name: "OEM Iridium Spark Plugs", qty: "1 Set (4)", status: "Packed" },
-                    { name: "Honda All-Season Coolant + DOT4 Brake Fluid", qty: "1L Each", status: "Packed" }
-                ]
-            },
-            {
-                category: "🛞 Emergency Recovery & Safety Gear",
-                items: [
-                    { name: "Full-Sized Spare Wheels (215/55R17)", qty: "2 Wheels", status: "Mounted" },
-                    { name: "12V Portable Heavy-Duty Air Compressor", qty: "1 Unit", status: "Packed" },
-                    { name: "Lithium 12V Jump Starter Pack", qty: "1 Unit", status: "Packed" },
-                    { name: "Tire Plug Repair Kit + Digital Pressure Gauge", qty: "1 Kit", status: "Packed" },
-                    { name: "Reflective Warning Triangles & High-Vis Vests", qty: "2 Pairs", status: "In Cabin" },
-                    { name: "5-8 Ton Heavy Duty Tow Strap + 1kg Fire Extinguisher", qty: "1 Set", status: "Packed" }
-                ]
-            }
-        ];
-
-        // Episodes Data
-        const episodesData = [
-            { ep: "Ep. 1", title: "Can an Urban Hybrid Crossover Drive Across Africa?", location: "Nairobi ➔ Lake Malawi Launch", status: "Planned", notes: "Introduce Vezel, stock setup challenge, hybrid MPG test." },
-            { ep: "Ep. 2", title: "Potholes, Borders & Fuel Efficiency: Malawi to Zimbabwe", location: "Songwe & Chirundu Borders", status: "Planned", notes: "Border customs realities, Malawi scenery, fuel log." },
-            { ep: "Ep. 3", title: "Crossing Beitbridge into South Africa", location: "Beitbridge & Polokwane", status: "Planned", notes: "Carnet de Passages verification, entering SA highways." },
-            { ep: "Ep. 4", title: "THE MILESTONE: Reaching Cape of Good Hope in a Vezel!", location: "Cape Peninsula & Signboard", status: "Planned", notes: "Emotional climax, iconic photo at the southwestern tip of Africa." },
-            { ep: "Ep. 5", title: "Driving Past Elephants in Botswana with 170mm Clearance", location: "Kalahari Highway & Kasane", status: "Planned", notes: "Wildlife roadside encounters, driving stock hybrid near game." },
-            { ep: "Ep. 6", title: "Crossing the $260M Kazungula Cable Bridge & Victoria Falls", location: "Kazungula & Livingstone", status: "Planned", notes: "Drone shots of Zambezi river bridge and Victoria Falls." },
-            { ep: "Ep. 7", title: "13,500 km Later: Did the Honda Vezel Survive?", location: "Return to Nairobi", status: "Planned", notes: "Full financial cost breakdown, reliability verdict." }
-        ];
-
-        // Gear List Data
-        const gearListData = [
-            { cat: "📹 Primary Camera", item: "iPhone 15 Pro / Sony ZV-E10 with OIS" },
-            { cat: "🚗 Dashcam / Action", item: "GoPro Hero 11 / DJI Action 4 windshield mount" },
-            { cat: "🎙️ Wireless Audio", item: "DJI Mic 2 / Rode Wireless GO II (Wind noise filters)" },
-            { cat: "🔋 Power Backup", item: "2x 20,000mAh Power Banks + 12V Car Inverter" },
-            { cat: "💾 Storage & Memory", item: "4x 256GB SanDisk Extreme MicroSD cards" },
-            { cat: "🛸 Aerial Footage", item: "DJI Mini 3 Pro (under 249g for border ease)" }
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderItinerary();
-            renderBorders();
-            renderChecklists();
-            renderSpares();
-            renderBudget();
-            renderContentPlanner();
-            updateKPIs();
-        });
-
-        // Switch Sheet Tabs
-        function switchTab(sheetId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.sheet-tab').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(sheetId).classList.remove('hidden');
-            document.getElementById(`tab-${sheetId}`).classList.add('active');
+      // Update Itinerary Table Lodging Values
+      document.querySelectorAll('#table-itinerary tbody tr td[data-kes]').forEach(td => {
+        const kesVal = parseFloat(td.getAttribute('data-kes'));
+        if (currentCurrency === 'USD') {
+          td.innerText = '$' + Math.round(kesVal / KES_TO_USD).toLocaleString();
+        } else {
+          td.innerText = 'KES ' + kesVal.toLocaleString();
         }
+      });
 
-        // Render Sheet 1: Itinerary
-        function renderItinerary() {
-            const tbody = document.getElementById('itinerary-tbody');
-            tbody.innerHTML = '';
+      const lodgingTotal = document.getElementById('itinerary-lodging-total');
+      if (lodgingTotal) {
+        const kesTotal = parseFloat(lodgingTotal.getAttribute('data-kes'));
+        lodgingTotal.innerText = currentCurrency === 'USD' ? '$' + Math.round(kesTotal / KES_TO_USD).toLocaleString() : 'KES ' + kesTotal.toLocaleString();
+      }
 
-            itineraryData.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = item.done ? 'bg-emerald-50/60 font-mono text-slate-500' : 'hover:bg-slate-50 font-mono';
-                
-                const cost = activeCurrency === 'KES' 
-                    ? `KES ${item.costKes.toLocaleString()}` 
-                    : `$${Math.round(item.costKes / USD_EXCHANGE_RATE)}`;
+      // Update KPI Strip
+      document.getElementById('stat-total-budget').innerText = currentCurrency === 'USD' ? '$2,326' : 'KES 300,000';
 
-                const badgeClass = item.status.includes('REST') 
-                    ? 'bg-amber-100 text-amber-800 border-amber-300' 
-                    : item.status.includes('MILESTONE')
-                    ? 'bg-purple-100 text-purple-800 border-purple-300'
-                    : 'bg-slate-100 text-slate-700 border-slate-300';
+      showToast('Switched currency display to ' + currentCurrency);
+    }
 
-                tr.innerHTML = `
-                    <td class="p-2 border-r border-slate-300 text-center">
-                        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDayDone(${index})" class="rounded text-emerald-600 focus:ring-emerald-500">
-                    </td>
-                    <td class="p-2 border-r border-slate-300 font-bold ${item.done ? 'line-through text-slate-400' : 'text-slate-800'}">${item.day}</td>
-                    <td class="p-2 border-r border-slate-300">
-                        <span class="text-[10px] px-1.5 py-0.5 rounded border font-sans font-semibold ${badgeClass}">${item.status}</span>
-                    </td>
-                    <td class="p-2 border-r border-slate-300 ${item.done ? 'line-through text-slate-400' : 'text-slate-800'}">${item.segment}</td>
-                    <td class="p-2 border-r border-slate-300 text-right font-bold text-slate-700">${item.km}</td>
-                    <td class="p-2 border-r border-slate-300 text-right text-slate-600">${item.time}</td>
-                    <td class="p-2 border-r border-slate-300 text-slate-700 font-sans">${item.hotel}</td>
-                    <td class="p-2 text-right font-bold ${item.costKes > 0 ? 'text-emerald-700' : 'text-slate-400'}">${cost}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+    // Filter Itinerary Table
+    function filterItineraryTable() {
+      const query = document.getElementById('itinerarySearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#itinerary-tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
 
-            calculateItineraryTotals();
-        }
+    // Pre-Trip Checklist Progress
+    function updateChecklistProgress() {
+      const items = document.querySelectorAll('.chk-item');
+      const checked = document.querySelectorAll('.chk-item:checked');
+      const pct = Math.round((checked.length / items.length) * 100);
+      document.getElementById('checklist-progress').innerText = pct + '%';
+      document.getElementById('checklist-bar').style.width = pct + '%';
+    }
 
-        function toggleDayDone(index) {
-            itineraryData[index].done = !itineraryData[index].done;
-            renderItinerary();
-            updateKPIs();
-        }
+    // Live Budget Recalculator
+    function recalculateBudget() {
+      const km = parseFloat(document.getElementById('calc-km').value) || 13000;
+      const kml = parseFloat(document.getElementById('calc-kml').value) || 19.0;
+      const fuelPrice = parseFloat(document.getElementById('calc-fuel-price').value) || 214;
 
-        function filterItinerary() {
-            const query = document.getElementById('itinerary-search').value.toLowerCase();
-            const rows = document.querySelectorAll('#itinerary-tbody tr');
-            itineraryData.forEach((item, index) => {
-                const text = `${item.day} ${item.segment} ${item.hotel} ${item.status}`.toLowerCase();
-                if (text.includes(query)) {
-                    rows[index].style.display = '';
-                } else {
-                    rows[index].style.display = 'none';
-                }
-            });
-        }
+      const liters = Math.round(km / kml);
+      const fuelCost = liters * fuelPrice;
+      const lodgingCost = 98800;
+      const foodCost = 30000;
+      const borderCost = 18000;
 
-        function calculateItineraryTotals() {
-            const totalDist = itineraryData.reduce((acc, curr) => acc + curr.km, 0);
-            const totalCost = itineraryData.reduce((acc, curr) => acc + curr.costKes, 0);
-            const doneCount = itineraryData.filter(d => d.done).length;
+      const grandTotal = fuelCost + lodgingCost + foodCost + borderCost;
+      const contingency = Math.max(0, 300000 - grandTotal);
+      const finalBudget = grandTotal + contingency;
 
-            document.getElementById('itin-total-dist').innerText = `${totalDist.toLocaleString()} km`;
-            document.getElementById('itin-total-cost').innerText = activeCurrency === 'KES' 
-                ? `KES ${totalCost.toLocaleString()}` 
-                : `$${Math.round(totalCost / USD_EXCHANGE_RATE)}`;
-            
-            document.getElementById('itinerary-progress-text').innerText = `${doneCount}/20 Days`;
-        }
+      document.getElementById('calc-liters-used').innerText = liters.toLocaleString();
+      document.getElementById('calc-fuel-unit').innerText = fuelPrice.toLocaleString();
+      document.getElementById('cost-fuel').innerText = 'KES ' + fuelCost.toLocaleString();
+      document.getElementById('cost-fuel-usd').innerText = '$' + Math.round(fuelCost / KES_TO_USD).toLocaleString();
+      document.getElementById('pct-fuel').innerText = ((fuelCost / finalBudget) * 100).toFixed(1) + '%';
 
-        // Render Sheet 2: Borders
-        function renderBorders() {
-            const tbody = document.getElementById('borders-tbody');
-            tbody.innerHTML = '';
+      document.getElementById('cost-contingency').innerText = 'KES ' + contingency.toLocaleString();
+      document.getElementById('cost-contingency-usd').innerText = '$' + Math.round(contingency / KES_TO_USD).toLocaleString();
+      document.getElementById('pct-contingency').innerText = ((contingency / finalBudget) * 100).toFixed(1) + '%';
 
-            borderData.forEach(b => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 font-mono text-xs';
-                tr.innerHTML = `
-                    <td class="p-2.5 border-r border-slate-300 font-bold text-emerald-900">${b.point}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-slate-700">${b.countries}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-slate-600">${b.hours}</td>
-                    <td class="p-2.5 border-r border-slate-300 font-bold text-amber-800">${b.fees}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-slate-700">${b.docs}</td>
-                    <td class="p-2.5 text-slate-600 font-sans">${b.tips}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+      document.getElementById('calc-grand-total').innerText = 'KES ' + finalBudget.toLocaleString();
+      document.getElementById('calc-grand-total-usd').innerText = '$' + Math.round(finalBudget / KES_TO_USD).toLocaleString();
+    }
 
-        // Render Sheet 3: Checklist
-        function renderChecklists() {
-            const container = document.getElementById('checklist-container');
-            container.innerHTML = '';
-
-            checklistData.forEach((cat, cIdx) => {
-                const card = document.createElement('div');
-                card.className = 'bg-slate-50 border border-slate-200 rounded-lg p-3';
-                let itemsHtml = '';
-
-                cat.items.forEach((item, iIdx) => {
-                    itemsHtml += `
-                        <label class="flex items-start space-x-2.5 p-1.5 hover:bg-white rounded cursor-pointer transition">
-                            <input type="checkbox" id="${item.id}" ${item.done ? 'checked' : ''} onchange="toggleChecklistItem(${cIdx}, ${iIdx})" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
-                            <span class="text-xs text-slate-700 ${item.done ? 'line-through text-slate-400' : ''}">${item.text}</span>
-                        </label>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wide mb-2 pb-1 border-b border-slate-200">${cat.category}</h3>
-                    <div class="space-y-1">${itemsHtml}</div>
-                `;
-                container.appendChild(card);
-            });
-
-            updateChecklistProgress();
-        }
-
-        function toggleChecklistItem(cIdx, iIdx) {
-            checklistData[cIdx].items[iIdx].done = !checklistData[cIdx].items[iIdx].done;
-            renderChecklists();
-        }
-
-        function updateChecklistProgress() {
-            let total = 0;
-            let done = 0;
-
-            checklistData.forEach(cat => {
-                cat.items.forEach(i => {
-                    total++;
-                    if (i.done) done++;
-                });
-            });
-
-            const pct = Math.round((done / total) * 100);
-            document.getElementById('checklist-progress-bar').style.width = `${pct}%`;
-            document.getElementById('checklist-progress-text').innerText = `${pct}% Done (${done}/${total})`;
-        }
-
-        // Render Sheet 4: Spares
-        function renderSpares() {
-            const container = document.getElementById('spares-container');
-            container.innerHTML = '';
-
-            sparesData.forEach(cat => {
-                const card = document.createElement('div');
-                card.className = 'bg-slate-50 border border-slate-200 rounded-lg p-3';
-                let rowsHtml = '';
-
-                cat.items.forEach(item => {
-                    rowsHtml += `
-                        <tr class="border-b border-slate-200 text-xs font-mono">
-                            <td class="py-1.5 text-slate-800 font-medium">${item.name}</td>
-                            <td class="py-1.5 text-slate-600 text-center">${item.qty}</td>
-                            <td class="py-1.5 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">${item.status}</span></td>
-                        </tr>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wide mb-2 pb-1 border-b border-slate-200">${cat.category}</h3>
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="text-[10px] text-slate-400 font-mono uppercase">
-                                <th class="pb-1">Item Description</th>
-                                <th class="pb-1 text-center">Qty</th>
-                                <th class="pb-1 text-right">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rowsHtml}</tbody>
-                    </table>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Render Sheet 5: Budget Calculator
-        function renderBudget() {
-            updateBudgetCalc();
-        }
-
-        function updateBudgetCalc() {
-            const pricePerL = parseFloat(document.getElementById('calc-fuel-price').value) || 175;
-            const efficiency = parseFloat(document.getElementById('calc-fuel-efficiency').value) || 20;
-            const totalDist = parseFloat(document.getElementById('calc-total-distance').value) || 13500;
-
-            const fuelLiters = totalDist / efficiency;
-            const fuelCostKes = fuelLiters * pricePerL;
-
-            const borderFeesKes = 35000;
-            const comesaKes = 15000;
-            const lodgingKes = 52000;
-            const foodKes = 30000;
-            const bufferKes = 50000;
-
-            const totalSpentKes = fuelCostKes + borderFeesKes + comesaKes + lodgingKes + foodKes + bufferKes;
-            const totalSpentUsd = totalSpentKes / USD_EXCHANGE_RATE;
-
-            const budgetRows = [
-                { cat: "Fuel (Petrol)", hack: `${Math.round(fuelLiters)} Liters @ KES ${pricePerL}/L (${efficiency} km/L avg). Hybrid saves ~KES 35,000 vs SUV.`, kes: fuelCostKes },
-                { cat: "Border Fees, Taxes & Tolls", hack: "SA N1 tolls, Botswana carbon levy, Eswatini road tax, Kazungula Bridge fee.", kes: borderFeesKes },
-                { cat: "COMESA & Local Insurance", hack: "COMESA Yellow Card from Kenya + SA local 3rd party insurance at border.", kes: comesaKes },
-                { cat: "Accommodations (18 Nights)", hack: "Hostels on transit days (~KES 2,600/night) + private B&Bs on rest days (~KES 4,800/night).", kes: lodgingKes },
-                { cat: "Food & Self-Catering", hack: "Supermarket groceries (Checkers/Shoprite) for daily road lunches + hostel kitchens.", kes: foodKes },
-                { cat: "Emergency Contingency Buffer", hack: "Cash buffer reserved strictly for roadside repairs, tires, or border contingencies.", kes: bufferKes }
-            ];
-
-            const tbody = document.getElementById('budget-tbody');
-            tbody.innerHTML = '';
-
-            budgetRows.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 font-mono text-xs';
-                const cost = activeCurrency === 'KES' 
-                    ? `KES ${Math.round(r.kes).toLocaleString()}` 
-                    : `$${Math.round(r.kes / USD_EXCHANGE_RATE).toLocaleString()}`;
-                const usdVal = `$${Math.round(r.kes / USD_EXCHANGE_RATE).toLocaleString()}`;
-
-                tr.innerHTML = `
-                    <td class="p-2.5 border-r border-slate-300 font-bold text-slate-800">${r.cat}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-slate-600 font-sans">${r.hack}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-right font-bold text-emerald-700">${cost}</td>
-                    <td class="p-2.5 text-right text-slate-500">${usdVal}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            // Update Total Row
-            document.getElementById('budget-calc-total-kes').innerText = activeCurrency === 'KES' 
-                ? `KES ${Math.round(totalSpentKes).toLocaleString()}` 
-                : `$${Math.round(totalSpentUsd).toLocaleString()}`;
-            document.getElementById('budget-calc-total-usd').innerText = `$${Math.round(totalSpentUsd).toLocaleString()}`;
-
-            // Variance indicator
-            const cap = 300000;
-            const diff = cap - totalSpentKes;
-            const varText = document.getElementById('budget-variance-text');
-            if (diff >= 0) {
-                varText.innerText = `✓ Within Budget Cap! (Under by KES ${Math.round(diff).toLocaleString()})`;
-                varText.className = 'p-3 border-r border-emerald-800 text-xs font-semibold text-emerald-200';
-            } else {
-                varText.innerText = `⚠️ EXCEEDS KES 300,000 CAP BY KES ${Math.abs(Math.round(diff)).toLocaleString()}!`;
-                varText.className = 'p-3 border-r border-emerald-800 text-xs font-bold text-amber-300';
-            }
-
-            // Update Progress Bar allocations
-            document.getElementById('bar-fuel').style.width = `${(fuelCostKes / totalSpentKes) * 100}%`;
-            document.getElementById('bar-lodging').style.width = `${(lodgingKes / totalSpentKes) * 100}%`;
-            document.getElementById('bar-borders').style.width = `${(borderFeesKes / totalSpentKes) * 100}%`;
-            document.getElementById('bar-food').style.width = `${(foodKes / totalSpentKes) * 100}%`;
-            document.getElementById('bar-com').style.width = `${(comesaKes / totalSpentKes) * 100}%`;
-            document.getElementById('bar-buffer').style.width = `${(bufferKes / totalSpentKes) * 100}%`;
-        }
-
-        function resetBudgetCalculator() {
-            document.getElementById('calc-fuel-price').value = 175;
-            document.getElementById('calc-fuel-efficiency').value = 20;
-            document.getElementById('calc-total-distance').value = 13500;
-            updateBudgetCalc();
-        }
-
-        // Render Sheet 6: Content Planner
-        function renderContentPlanner() {
-            const tbody = document.getElementById('episodes-tbody');
-            tbody.innerHTML = '';
-
-            episodesData.forEach(ep => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 font-mono text-xs';
-                tr.innerHTML = `
-                    <td class="p-2.5 border-r border-slate-300 font-bold text-red-600 text-center">${ep.ep}</td>
-                    <td class="p-2.5 border-r border-slate-300 font-bold text-slate-800">${ep.title}</td>
-                    <td class="p-2.5 border-r border-slate-300 text-slate-600 font-sans">${ep.location}</td>
-                    <td class="p-2.5 border-r border-slate-300"><span class="bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded text-[10px] font-semibold">${ep.status}</span></td>
-                    <td class="p-2.5 text-slate-500 font-sans text-center">${ep.notes}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            const gearDiv = document.getElementById('gear-checklist');
-            gearDiv.innerHTML = '';
-            gearListData.forEach(g => {
-                gearDiv.innerHTML += `
-                    <div class="bg-white p-2 rounded border border-slate-200 flex items-center justify-between">
-                        <span class="font-semibold text-slate-700">${g.cat}</span>
-                        <span class="text-slate-500 font-mono text-[11px]">${g.item}</span>
-                    </div>
-                `;
-            });
-        }
-
-        // Global KPI & Currency Toggles
-        function toggleCurrency(curr) {
-            activeCurrency = curr;
-            renderItinerary();
-            updateBudgetCalc();
-
-            document.getElementById('kpi-budget-cap').innerText = curr === 'KES' ? 'KES 300,000' : '$2,308';
-        }
-
-        function updateKPIs() {
-            // Updated dynamically with calculations
-        }
-
-        // Copy ALL 6 sheets data formatted for direct paste into Google Sheets (TSV)
-        function copyAllForGoogleSheets() {
-            let tsv = [];
-            const sheets = [
-                { id: 'sheet-itinerary', name: '=== 1. MASTER ITINERARY & DRIVING SCHEDULE ===' },
-                { id: 'sheet-borders', name: '=== 2. BORDER CROSSING DIRECTORY & MATRIX ===' },
-                { id: 'sheet-checklist', name: '=== 3. PRE-TRIP LEGAL & ADMIN CHECKLIST ===' },
-                { id: 'sheet-spares', name: '=== 4. VEZEL SPARES & RECOVERY GEAR ===' },
-                { id: 'sheet-budget', name: '=== 5. LIVE FINANCIAL BUDGET CALCULATOR ===' },
-                { id: 'sheet-content', name: '=== 6. TIKTOK & YOUTUBE CONTENT PLANNER ===' }
-            ];
-
-            sheets.forEach(s => {
-                tsv.push(s.name);
-                const elem = document.getElementById(s.id);
-                if (!elem) return;
-                const tables = elem.querySelectorAll('table');
-                tables.forEach(table => {
-                    const rows = table.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        const cols = row.querySelectorAll('th, td');
-                        let rowData = [];
-                        cols.forEach(col => {
-                            // Use textContent so text from hidden tabs is captured
-                            let text = (col.textContent || col.innerText || '').replace(/(\r\n|\n|\r)/gm, " ").trim();
-                            rowData.push(text);
-                        });
-                        tsv.push(rowData.join("\t"));
-                    });
-                    tsv.push("");
-                });
-                tsv.push("");
-            });
-
-            const tsvString = tsv.join("\n");
-            const textarea = document.createElement("textarea");
-            textarea.value = tsvString;
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                alert("✓ All 6 sheets copied to clipboard as one file!\n\nTo import into Google Sheets:\n1. Open Google Sheets (sheets.google.com)\n2. Select cell A1 and press Ctrl+V (or Cmd+V on Mac)");
-            } catch (err) {
-                alert("Failed to copy automatically. Please use 'Export Full Workbook (.xls)' instead.");
-            } finally {
-                document.body.removeChild(textarea);
-            }
-        }
-
-        // Export ALL 6 sheets as a single multi-tab Excel Workbook (.xls SpreadsheetML format)
-        function exportAllToExcel() {
-            let xml = `<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:html="http://www.w3.org/TR/REC-html40">
- <Styles>
-  <Style ss:ID="Default" ss:Name="Normal">
-   <Alignment ss:Vertical="Bottom"/>
-   <Borders/>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
-   <Interior/>
-   <NumberFormat/>
-   <Protection/>
-  </Style>
-  <Style ss:ID="Header">
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#FFFFFF" ss:Bold="1"/>
-   <Interior ss:Color="#107C41" ss:Pattern="Solid"/>
-  </Style>
- </Styles>`;
-
-            const sheets = [
-                { id: 'sheet-itinerary', name: 'Master Itinerary' },
-                { id: 'sheet-borders', name: 'Border Directory' },
-                { id: 'sheet-checklist', name: 'Pre-Trip Checklist' },
-                { id: 'sheet-spares', name: 'Vezel Spares' },
-                { id: 'sheet-budget', name: 'Budget Calculator' },
-                { id: 'sheet-content', name: 'Content Planner' }
-            ];
-
-            sheets.forEach(s => {
-                const elem = document.getElementById(s.id);
-                if (!elem) return;
-                const tables = elem.querySelectorAll('table');
-                xml += `<Worksheet ss:Name="${s.name}"><Table>`;
-                
-                tables.forEach(table => {
-                    const rows = table.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        xml += '<Row>';
-                        const cells = row.querySelectorAll('th, td');
-                        cells.forEach(cell => {
-                            // Use textContent to ensure hidden tab elements are included in XML export
-                            let text = (cell.textContent || cell.innerText || '').replace(/(\r\n|\n|\r)/gm, " ").trim();
-                            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-                            const isHeader = cell.tagName === 'TH';
-                            const styleAttr = isHeader ? ' ss:StyleID="Header"' : '';
-                            xml += `<Cell${styleAttr}><Data ss:Type="String">${text}</Data></Cell>`;
-                        });
-                        xml += '</Row>';
-                    });
-                    xml += '<Row></Row>';
-                });
-
-                xml += `</Table></Worksheet>`;
-            });
-
-            xml += `</Workbook>`;
-
-            const blob = new Blob([xml], { type: 'application/vnd.ms-excel' });
-            const downloadLink = document.createElement("a");
-            downloadLink.download = `Vezel_Cape_Expedition_Master_Workbook.xls`;
-            downloadLink.href = window.URL.createObjectURL(blob);
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
-    </script>
+    // Show Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
 </body>
 </html>
